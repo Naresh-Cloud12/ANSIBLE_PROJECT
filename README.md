@@ -31,9 +31,20 @@ I just added this one more section exactly the same instead of name here I have 
 
 ---let's set up passwordless authentication--
 
- 
+ you can do passwordless authentication in two ways one you can use the public key private key the pem file using SSH copy ID or you can just use the password also but this is most recommended way I will use the SSH copy ID because this is very popular one so just copy that and paste it in terminal ---ssh-copy-id -f "-o IdentityFile <PATH TO PEM FILE>" ubuntu@<INSTANCE-PUBLIC-IP>--- -f will force copying of the pem file identity file and you need to provide the pem file that you have copied to the ec2 instances now all that I need to do is just provide EC2 username here the first one is Amazon Linux so the username will be EC2 user at the(@) rate IP address address so this will be my IP address perfect run this command passwordless authentication is set up now now we need to do for all the three if it was ubuntu give ubuntu@IPaddresss..;
 
+TASK 3-----Automate the shutdown of Ubuntu Instances only using Ansible Conditionals(((((Hint: Use when condition on ansible gather_facts))))
+so here we have three instances right on the AWS console we should not be shutting down all three instances but execute that only on the Ubuntu to instances so let's see how to do that conditioning in the Playbook okay let's go to our Visual Studio code again and here what I'm going to do now is I will create one more Playbook you can create that in a different folder also but just because I'm going to push this to a GitHub repository I'll put everything under day7 folder now give the name as ec2stop.yaml   We need the inventory file because I want to connect to this EC2 instances and run that command for that what I'm going to do is inside day7 folder I need a inventory file inventory.ini  if you want to group The Host you can group I am okay not grouping also but let me just create a group called all which is equivalent to not creating any
+ group and simply copy this IP address ec2 - user@IPAddress this followed by ubantu@IPAddress ubantu@IP addresses![image](https://github.com/user-attachments/assets/ef101f29-9298-4593-99ff-a6c661f35e81)  you can simply group uh uban to host as uh uban 2 and run this Playbook as you know but in that task we need to use when condition 
+ so host as all become true because it's an administrative task where I need elevated privileges so I will say become true so so that it has the permissions not running as the ec2 user but with elevated permissions  --So our task is to shutdown ubuntu servers only--write the task like this anible dot buil-in do command to run any command you can use ansible.builtin.command: /sbin/shutdown -t now command just like a shell command where I'll say sbin shutdown SB shutdown is the command to shut down an instance minus t now hyphenT now represents that shutdown immediately  ![image](https://github.com/user-attachments/assets/324bd192-51f0-40cd-b00a-26315c09970b)
+now use when conditon when:
+       ansible_facts['os_family'] == "Debian" ![image](https://github.com/user-attachments/assets/8cca172a-579d-4779-9cfc-97810941841e)
 
+  this condition is actually coming from gather facts whenever you run gather facts I always used to tell you when you run gather facts which is the first step of the anable Playbook anible collects all the information from your target machines which is your manage nodes 
+       what information is it collecting because in the when condition I am using the information which anible what we can do is we can see what is in The Gather fact let's do this name print all the anible gathered facts so here I'll say anible do builtin dot debug okay just say where I'm just writing a debug command where I am just asking anible to print what is in the anable facts so if you want to print any ![image](https://github.com/user-attachments/assets/220dac97-d511-4952-9be9-cc2c6136dac5)  if you want to debug you can use this method where you will say where anible facts
+we will see two of them are with Debian and I want only two of them to be stopped shutdown so I'll just replace os_family with osore family
+  ![image](https://github.com/user-attachments/assets/237260f3-d3b6-4874-8af7-96e5d63c0726)
 
- 
+Now it will stop and shhutdown
+
 
